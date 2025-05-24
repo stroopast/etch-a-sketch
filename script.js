@@ -26,7 +26,20 @@ function createGridBoxes(numOfBoxes)
         box.style.height = boxSize.toString() + "%";
         box.style.border = "1px solid black";
         container.appendChild(box);
+        box.addEventListener('mouseover',(event) => {
+            let randomColor = getRandomColor();
+            box.style.backgroundColor = randomColor;
+        });
     }
 }
 
-createGridBoxes(gridSize);
+function getRandomColor() {
+  var letters = '0123456789ABCDEF';
+  var color = '#';
+  for (var i = 0; i < 6; i++) {
+    color += letters[Math.floor(Math.random() * 16)];
+  }
+  return color.toString();
+}
+
+createGridBoxes(30);
