@@ -1,65 +1,78 @@
-const GRID_WIDTH = 500;
-const GRID_HEIGHT = 500;
-let gridSize = 16
-
+let initialGridSize = 16;
 const body = document.querySelector("body");
 
-// create a 16x16 grid
 const container = document.createElement("div");
 const changeGridBtn = document.createElement("button");
 body.appendChild(changeGridBtn);
 body.appendChild(container);
 
-// change grid button
 changeGridBtn.style.display = "flex";
+changeGridBtn.style.height = "30px";
 changeGridBtn.style.width = "200px";
-changeGridBtn.style.height = "50px";
-changeGridBtn.style.margin = "auto";
-changeGridBtn.style.backgroundColor = "red";
 changeGridBtn.textContent = "Change grid size";
-changeGridBtn.style.fontSize = "20px";
-changeGridBtn.style.justifyContent = "center";
 changeGridBtn.style.alignItems = "center";
+changeGridBtn.style.justifyContent = "center";
+changeGridBtn.style.margin = "auto";
+changeGridBtn.style.marginBottom = "30px";
 
-// grid container
+
 container.style.display = "flex";
 container.style.flexWrap = "wrap";
-container.style.width = GRID_WIDTH.toString() + "px";
-container.style.height = GRID_WIDTH.toString() + "px";
+container.style.width = "600px";
+container.style.height = "600px";
 container.style.margin = "auto";
-container.style.marginTop = "200px";
-container.style.marginBottom = "200px";
-container.style.border = "1px solid black";
+
+createGrid(16);
 
 changeGridBtn.addEventListener('click',(event) => {
   let value = prompt("Enter the grid size, maximum is 100");
-  createGridBoxes(value);
+  if(value > 100)
+  {
+    alert("Grid can't be greater than 100");
+  }
+  else if(value < 1)
+  {
+    alert("Grid can't be smaller than 1");
+  }
+  else
+  {
+    removeAllChildNodes(container);
+    createGrid(value);
+  }
 });
 
-function createGridBoxes(numOfBoxes)
+function createGrid(gridSize)
 {
-  if(numOfBoxes > 100)
-  {
-    return;
-  }
+    let gridPrecent = 100 / gridSize;
+    for(let i = 0; i < gridSize * gridSize; i++)
+    {
+        let box = document.createElement("div");
+        container.appendChild(box);
+        box.style.width = gridPrecent + "%";
+        box.style.height = gridPrecent + "%";
+        box.style.border = "1px solid gray";
+        box.style.opacity = "0.1";
+        box.style.backgroundColor = "white";
+        box.addEventListener('mouseover',(event) => {
+          if(box.style.backgroundColor === "white")
+          {
+            let randomColor = getRandomColor();
+            box.style.backgroundColor = randomColor;
+          }
+          else
+          {
+            let currentOpacity = box.style.opacity;
+            currentOpacity = parseFloat(currentOpacity) + 0.1;
+            box.style.opacity = currentOpacity.toString();
+          }
+        });
+    }
+}
 
-  while(container.firstChild){
-    container.removeChild(container.firstChild);
-  }
-
-  let boxSize = 100 / numOfBoxes;
-  for(let i = 0; i < numOfBoxes * numOfBoxes; i++)
-  {
-      const box = document.createElement("div");
-      box.style.width = boxSize.toString() + "%";
-      box.style.height = boxSize.toString() + "%";
-      box.style.border = "1px solid black";
-      container.appendChild(box);
-      box.addEventListener('mouseover',(event) => {
-          let randomColor = getRandomColor();
-          box.style.backgroundColor = randomColor;
-      });
-  }
+function removeAllChildNodes(parent) {
+    while (parent.firstChild) {
+        parent.removeChild(parent.firstChild);
+    }
 }
 
 function getRandomColor() {
@@ -70,5 +83,3 @@ function getRandomColor() {
   }
   return color.toString();
 }
-
-createGridBoxes(16);
